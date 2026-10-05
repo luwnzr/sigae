@@ -1,0 +1,21 @@
+# Ignorar arquivos locais com senhas e chaves
+.env
+.env.local
+
+# Ignorar o banco de dados se você usar SQLite localmente
+*.sqlite3
+*.sqlite
+*.db
+
+# Ignorar caches gerados pelo Python
+__pycache__/
+*.pyc
+
+# Ignorar pastas de dependências (caso venha a usar no futuro)
+/vendor/
+node_modules/
+.venv/
+venv/
+
+# SE o seu database.php tiver senhas fixas e você não puder mexer nele agora, descomente a linha abaixo:
+# /config/database.php
