@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Turmas{% endblock %}
+{% block content %}
+<h1 class="h3 fw-bold text-sigae text-center mb-4">Turmas</h1>
+{% for t in turmas %}
+<article class="reserva-card mb-3">
+  <header class="reserva-head head-atual">
+    <div><div class="small opacity-75">Turma:</div><div class="fw-bold text-uppercase fs-5">{{ t.nome }}</div></div>
+    <span class="fw-semibold">{{ t.get_turno_display }}</span>
+  </header>
+  <div class="reserva-body text-center">
+    <div><strong>Instrutor:</strong> {{ t.instrutor.nome_completo|default:"—" }}</div>
+    <div><strong>Alunos:</strong> {{ t.alunos.all|length }}</div>
+  </div>
+  <button class="reserva-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#turma{{ t.pk }}" aria-expanded="false">
+    <span>Alunos</span><i class="bi bi-plus-lg"></i>
+  </button>
+  <div class="collapse" id="turma{{ t.pk }}">
+    <ul class="list-group list-group-flush">
+      {% for a in t.alunos.all %}
+        <li class="list-group-item">{{ a.nome_completo }} <small class="text-muted">· {{ a.email }}</small></li>
+      {% empty %}<li class="list-group-item text-muted">Sem alunos.</li>{% endfor %}
+    </ul>
+  </div>
+</article>
+{% empty %}
+<div class="reserva-card p-5 text-center text-muted">Nenhuma turma disponível.</div>
+{% endfor %}
+{% endblock %}

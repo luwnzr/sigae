@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Início{% endblock %}
+{% block content %}
+
+{% if modo_aluno %}
+  <div class="text-center mb-4">
+    <h1 class="h3 fw-bold mb-1">Meu notebook de hoje</h1>
+    <div class="text-muted">{{ hoje|date:"l, d/m/Y" }}</div>
+  </div>
+
+  {% if not turma %}
+    <div class="alert alert-warning">Você não está vinculado a nenhuma turma. Procure o Administrador.</div>
+  {% elif meu %}
+    <article class="reserva-card">
+      <header class="reserva-head head-{{ estado }}">
+        <div><div class="small opacity-75">Aluno:</div><div class="fw-bold text-uppercase fs-5">{{ user.nome_completo }}</div></div>
+        <span class="fw-semibold">{{ turma.get_turno_display }}</span>
+      </header>
+      <div class="reserva-body text-center py-4">
+        <div class="text-muted">{{ turma.nome }}</div>
+        <div>Seu notebook</div>
+        <div class="nb-destaque">Nº {{ meu.equipamento.numero }}</div>
+        <div><span class="badge {{ meu.badge_class }}">{{ meu.get_status_display }}</span></div>
+        {% if meu.aguardando_entrega %}<div class="text-muted small mt-2">Retire com o Administrador, que confirma o número do notebook na entrega.</div>{% endif %}
+      </div>
+    </article>
+  {% elif livres %}
+    <article class="reserva-card">
+      <header class="reserva-head head-{{ estado }}">
+        <div><div class="small opacity-75">Turma:</div><div class="fw-bold text-uppercase fs-5">{{ turma.nome }}</div></div>
+        <span class="fw-semibold">{{ turma.get_turno_display }}</span>
+      </header>
+      <div class="reserva-body text-center py-4">
+        <div>Há <strong>{{ livres }}</strong> notebook{{ livres|pluralize }} reservado{{ livres|pluralize }} para a sua turma hoje.</div>
+        <form method="post" action="{% url 'resgatar' %}" class="mt-3">{% csrf_token %}
+          <button class="btn btn-primary btn-lg"><i class="bi bi-laptop"></i> Solicitar meu notebook</button>
+        </form>
+      </div>
+    </article>
+  {% else %}
+    <div class="reserva-card p-5 text-center text-muted">
+      <i class="bi bi-calendar-x fs-1"></i>
+      <p class="mb-0 mt-2">Nenhum notebook reservado para a sua turma hoje.</p>
+    </div>
+  {% endif %}
+
+{% else %}
+  <div class="text-center mb-4">
+    {% if pode_reservar %}
+      <a class="btn btn-primary mb-3" href="{% url 'equipamentos' %}"><i class="bi bi-plus-lg"></i> Reservar notebooks para a turma</a>
+    {% endif %}
+    <h1 class="h3 fw-bold mb-1">{{ total }} reserva{{ total|pluralize }} encontrada{{ total|pluralize }} para hoje:</h1>
+    <div class="text-muted">{{ hoje|date:"l, d/m/Y" }}</div>
+  </div>
+
+  {% for c in cards %}
+    {% include "core/_card_reserva.html" %}
+  {% empty %}
+  <div class="reserva-card p-5 text-center text-muted">
+    <i class="bi bi-calendar-x fs-1"></i>
+    <p class="mb-0 mt-2">Nenhuma reserva para hoje.</p>
+  </div>
+  {% endfor %}
+{% endif %}
+{% endblock %}

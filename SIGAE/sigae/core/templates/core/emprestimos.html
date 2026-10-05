@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}{{ titulo }}{% endblock %}
+{% block content %}
+<h1 class="h3 fw-bold text-sigae text-center mb-3">{{ titulo }}</h1>
+
+<form method="get" class="reserva-card filtro-card mb-4"><div class="p-3">
+  <div class="row g-2 align-items-center">
+    <div class="col-12 col-md">
+      <div class="input-group"><span class="input-group-text">Cód. de Empréstimo</span>{{ form.codigo }}</div>
+    </div>
+    <div class="col-6 col-md-auto">
+      <button class="btn btn-outline-primary w-100" type="button" data-bs-toggle="collapse" data-bs-target="#maisFiltros" aria-expanded="{{ mais_aberto|yesno:'true,false' }}">Mais filtros</button>
+    </div>
+    <div class="col-6 col-md-auto"><button class="btn btn-primary w-100">Buscar</button></div>
+  </div>
+  <div class="collapse {% if mais_aberto %}show{% endif %} mt-3" id="maisFiltros">
+    <div class="row g-2">
+      <div class="col-6 col-md-3"><label class="form-label small mb-1">Data</label>{{ form.data }}</div>
+      <div class="col-6 col-md-3"><label class="form-label small mb-1">Turno</label>{{ form.turno }}</div>
+      <div class="col-6 col-md-3"><label class="form-label small mb-1">Nº do equipamento</label>{{ form.equipamento }}</div>
+      {% if com_status %}<div class="col-6 col-md-3"><label class="form-label small mb-1">Status</label>{{ form.status }}</div>{% endif %}
+    </div>
+    <a class="btn btn-link px-0 mt-2" href="{{ request.path }}">Limpar filtros</a>
+  </div>
+</div></form>
+
+{% for r in reservas %}
+  {% include "core/_card_emprestimo.html" %}
+{% empty %}
+  <div class="reserva-card p-5 text-center text-muted">
+    <i class="bi bi-inbox fs-1"></i>
+    <p class="mb-0 mt-2">Nada encontrado.</p>
+  </div>
+{% endfor %}
+{% endblock %}

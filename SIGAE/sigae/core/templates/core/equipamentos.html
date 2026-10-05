@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Equipamentos{% endblock %}
+{% block content %}
+<h1 class="h3 fw-bold text-sigae text-center mb-4">Equipamentos</h1>
+
+{% if pode_reservar %}
+<article class="reserva-card mb-4">
+  <header class="reserva-head head-atual"><div class="fw-bold text-uppercase">Reservar notebooks para a minha turma</div></header>
+  <div class="reserva-body">
+    <form method="post" action="{% url 'reservar' %}" class="row g-2 align-items-end">{% csrf_token %}
+      <div class="col-12 col-md-3"><label class="form-label">Data</label>{{ form.data }}</div>
+      <div class="col-12 col-md-3"><label class="form-label">Turno</label>{{ form.turno }}</div>
+      <div class="col-12 col-md-3"><label class="form-label">Quantidade</label>{{ form.quantidade }}</div>
+      <div class="col-12 col-md-3"><button class="btn btn-primary w-100"><i class="bi bi-bookmark-plus"></i> Reservar</button></div>
+    </form>
+    <div class="form-text">Os alunos da turma solicitam os notebooks reservados no próprio Início.</div>
+  </div>
+</article>
+
+{% endif %}
+<!-- Área de Filtros separada dos cards -->
+<div class="d-flex flex-wrap align-items-center justify-content-between mb-4">
+  <div class="fw-bold text-uppercase text-sigae fs-5">
+    Notebooks <span class="badge bg-secondary ms-1 fs-6">{{ notebooks|length }}</span>
+  </div>
+  <div class="d-flex flex-wrap gap-2">
+    <a href="{% url 'equipamentos' %}" class="btn btn-sm {% if not filtro %}btn-primary{% else %}btn-outline-primary{% endif %}">Todos</a>
+    {% for value, label in status_choices %}
+      <a href="?status={{ value }}" class="btn btn-sm {% if filtro == value %}btn-primary{% else %}btn-outline-primary{% endif %}">{{ label }}</a>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- Laço de repetição criando um card retangular para cada Notebook -->
+{% for n in notebooks %}
+<article class="reserva-card mb-3">
+  <!-- Adicionada a classe 'head-atual' para garantir o fundo azul escuro -->
+  <header class="reserva-head head-atual">
+    <div class="fw-bold fs-5 text-uppercase">
+      <i class="bi bi-laptop me-2"></i>Notebook #{{ n.numero }}
+    </div>
+    <!-- O badge com o estado do equipamento continua alinhado à direita -->
+    <span class="badge {{ n.badge_class }} fs-6 ms-auto">{{ n.get_status_display }}</span>
+  </header>
+  
+  <!-- Corpo do card com fundo branco e informações centralizadas -->
+  <div class="reserva-body text-center">
+    {% if user.is_administrador and n.reserva_atual %}
+      <div><strong>Usuário Atual:</strong> {% firstof n.reserva_atual.aluno.nome_completo n.reserva_atual.solicitante.nome_completo %}</div>
+      {% if n.reserva_atual.aluno %}
+        <div><strong>Turma:</strong> {{ n.reserva_atual.turma.nome }}</div>
+      {% endif %}
+    {% else %}
+      <div class="text-muted small">Equipamento sem atribuição no momento.</div>
+    {% endif %}
+  </div>
+</article>
+
+{% empty %}
+<article class="reserva-card p-5 text-center text-muted">
+  <i class="bi bi-laptop fs-1"></i>
+  <p class="mb-0 mt-2">Nenhum notebook encontrado com este status.</p>
+</article>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Reservas{% endblock %}
+{% block content %}
+<h1 class="h3 fw-bold text-sigae text-center mb-1">Reservas</h1>
+<p class="text-muted text-center">Todas as reservas feitas e histórico</p>
+
+<form method="get" class="reserva-card filtro-card mb-4"><div class="p-3">
+  <div class="row g-2 align-items-end">
+    <div class="col-6 col-md-3"><label class="form-label small mb-1">Data</label>{{ form.data }}</div>
+    <div class="col-6 col-md-2"><label class="form-label small mb-1">Turno</label>{{ form.turno }}</div>
+    <div class="col-6 col-md-2"><label class="form-label small mb-1">Nº do equipamento</label>{{ form.equipamento }}</div>
+    <div class="col-6 col-md-2"><label class="form-label small mb-1">Status</label>{{ form.status }}</div>
+    <div class="col-12 col-md-3 d-flex gap-2">
+      <button class="btn btn-primary flex-fill"><i class="bi bi-funnel"></i> Filtrar</button>
+      <a class="btn btn-outline-primary" href="{% url 'reservas' %}">Limpar</a>
+    </div>
+  </div>
+</div></form>
+
+{% for c in cards %}
+  {% include "core/_card_reserva.html" %}
+{% empty %}
+  <div class="reserva-card p-5 text-center text-muted">
+    <i class="bi bi-calendar-x fs-1"></i>
+    <p class="mb-0 mt-2">Nenhuma reserva encontrada.</p>
+  </div>
+{% endfor %}
+{% endblock %}

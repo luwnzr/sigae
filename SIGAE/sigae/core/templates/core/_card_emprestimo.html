@@ -1,0 +1,32 @@
+<article class="reserva-card mb-3">
+  <header class="reserva-head {{ r.head_class }}">
+    <div class="fw-bold fs-5">Código - {{ r.pk }}</div>
+    <span>{{ r.data_hora|date:"H:i - d/m/Y" }}</span>
+  </header>
+  <div class="reserva-body">
+    <div><strong>Equipamento:</strong> {% if r.equipamento %}Nº {{ r.equipamento.numero }}{% else %}—{% endif %}
+      <span class="badge {{ r.badge_class }} ms-1">{{ r.get_status_display }}</span></div>
+    <div><strong>Solicitado por:</strong> {{ r.solicitado_por.nome_completo }}</div>
+    <div><strong>Emprestado por:</strong> {% if r.entregue_por %}{{ r.entregue_por.nome_completo }}{% else %}—{% endif %}</div>
+    <div><strong>Turma:</strong> {{ r.turma.nome|default:"—" }} · {{ r.get_turno_display }}</div>
+    <div><strong>Instrutor:</strong> {{ r.solicitante.nome_completo }}</div>
+    {% if r.devolvida_em %}<div><strong>Devolvido em:</strong> {{ r.devolvida_em|date:"H:i - d/m/Y" }}</div>{% endif %}
+  </div>
+  {% if user.is_administrador and r.aguardando_entrega or user.is_administrador and r.esta_ativa %}
+  <footer class="reserva-footer">
+    {% if r.aguardando_entrega %}
+    <form method="post" action="{% url 'entregar' r.pk %}" class="d-flex flex-wrap gap-2 align-items-center">{% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.get_full_path }}">
+      <label class="small text-muted mb-0">Nº do notebook apresentado:</label>
+      <input type="number" name="numero" min="1" max="45" value="{{ r.equipamento.numero }}" class="form-control" style="width:6rem" required>
+      <button class="btn btn-primary flex-fill">Registrar entrega</button>
+    </form>
+    {% else %}
+    <form method="post" action="{% url 'devolver' r.pk %}">{% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.get_full_path }}">
+      <button class="btn btn-primary w-100">Confirmar devolução</button>
+    </form>
+    {% endif %}
+  </footer>
+  {% endif %}
+</article>

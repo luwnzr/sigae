@@ -1,0 +1,57 @@
+<article class="reserva-card mb-3">
+  <header class="reserva-head head-{{ c.estado }}">
+    <div>
+      <div class="small opacity-75">Instrutor:</div>
+      <div class="fw-bold text-uppercase fs-5">{{ c.solicitante.nome_completo }}</div>
+    </div>
+    <span class="fw-semibold text-end">{{ c.turno_label }}{% if c.mostrar_data %} · {{ c.data|date:"d/m/Y" }}{% endif %}</span>
+  </header>
+
+  <div class="reserva-body text-center">
+    <div class="fw-bold">{{ c.turma.nome|default:"Turma não informada" }}</div>
+    <div><strong>Equipamentos reservados:</strong> {{ c.reservas|length }}</div>
+    <div class="text-muted small">Solicitados pelos alunos: {{ c.resgatados }} de {{ c.reservas|length }}</div>
+  </div>
+
+  <button class="reserva-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#{{ c.dom_id }}" aria-expanded="false" aria-controls="{{ c.dom_id }}">
+    <span>Equipamentos</span><i class="bi bi-plus-lg"></i>
+  </button>
+  <div class="collapse" id="{{ c.dom_id }}">
+    <ul class="list-group list-group-flush">
+      {% for r in c.reservas %}
+      <li class="list-group-item d-flex flex-wrap align-items-center justify-content-between gap-2">
+        <div>
+          <i class="bi bi-laptop text-sigae"></i>
+          <strong>Notebook {{ r.equipamento.numero|default:"—" }}</strong>
+          <span class="badge {{ r.badge_class }} ms-1">{{ r.get_status_display }}</span>
+          <span class="ms-2 small">
+            {% if r.aluno %}<i class="bi bi-person"></i> {{ r.aluno.nome_completo }}{% else %}<span class="text-muted">sem solicitação de aluno</span>{% endif %}
+          </span>
+        </div>
+        <div class="d-flex flex-wrap align-items-center gap-1">
+          {% if user.is_administrador %}
+            {% if r.aguardando_entrega %}
+            <form method="post" action="{% url 'entregar' r.pk %}" class="d-inline-flex gap-1">{% csrf_token %}
+              <input type="hidden" name="next" value="{{ request.get_full_path }}">
+              <input type="number" name="numero" min="1" max="45" value="{{ r.equipamento.numero }}" class="form-control form-control-sm" style="width:5rem" required aria-label="Nº do notebook">
+              <button class="btn btn-sm btn-primary">Entregar</button>
+            </form>
+            {% elif r.esta_ativa %}
+            <form method="post" action="{% url 'devolver' r.pk %}" class="d-inline">{% csrf_token %}
+              <input type="hidden" name="next" value="{{ request.get_full_path }}">
+              <button class="btn btn-sm btn-outline-primary">Registrar devolução</button>
+            </form>
+            {% endif %}
+          {% endif %}
+          {% if r.aguardando_entrega %}
+            <form method="post" action="{% url 'cancelar' r.pk %}" class="d-inline">{% csrf_token %}
+              <input type="hidden" name="next" value="{{ request.get_full_path }}">
+              <button class="btn btn-sm btn-link text-danger">Cancelar</button>
+            </form>
+          {% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</article>

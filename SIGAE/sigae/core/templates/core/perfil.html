@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Perfil{% endblock %}
+{% block content %}
+<h1 class="h3 fw-bold text-sigae text-center mb-4">Perfil</h1>
+<div class="row g-3">
+  <div class="col-12 col-lg-6">
+    <article class="reserva-card h-100">
+      <header class="reserva-head head-atual"><div class="fw-bold text-uppercase">Meus dados</div></header>
+      <div class="reserva-body">
+        <dl class="row mb-0">
+          <dt class="col-sm-4">Nome</dt><dd class="col-sm-8">{{ user.nome_completo }}</dd>
+          <dt class="col-sm-4">E-mail</dt><dd class="col-sm-8">{{ user.email }}</dd>
+          <dt class="col-sm-4">Perfil</dt><dd class="col-sm-8">{{ user.perfil }}</dd>
+          <dt class="col-sm-4">Turma</dt><dd class="col-sm-8">{{ user.turma.nome|default:"—" }}</dd>
+          <dt class="col-sm-4">Turno</dt><dd class="col-sm-8">{{ user.get_turno_display|default:"—" }}</dd>
+        </dl>
+      </div>
+    </article>
+  </div>
+  <div class="col-12 col-lg-6">
+    <article class="reserva-card h-100">
+      <header class="reserva-head head-atual"><div class="fw-bold text-uppercase">Alterar senha</div></header>
+      <div class="reserva-body">
+        <form method="post">{% csrf_token %}
+          {% for f in form %}
+            <div class="mb-3"><label class="form-label" for="{{ f.id_for_label }}">{{ f.label }}</label>{{ f }}
+              {% for e in f.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+            </div>
+          {% endfor %}
+          <button class="btn btn-primary">Salvar nova senha</button>
+        </form>
+      </div>
+    </article>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,61 @@
+:root {
+  --sigae: #001178; --sigae-dark: #000c5a; --sigae-soft: #eef0fb; --line: #dfe2f0;
+  --bs-primary: #001178; --bs-primary-rgb: 0, 17, 120; --bs-link-color: #001178;
+  --bs-border-radius: .25rem; --bs-border-radius-sm: .2rem; --bs-border-radius-lg: .3rem; --bs-border-radius-xl: .3rem; --bs-border-radius-pill: .25rem;
+}
+body { font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: #f7f8fc; color: #1b1f3b; }
+.btn-primary { --bs-btn-bg: var(--sigae); --bs-btn-border-color: var(--sigae); --bs-btn-hover-bg: var(--sigae-dark); --bs-btn-hover-border-color: var(--sigae-dark); --bs-btn-active-bg: var(--sigae-dark); --bs-btn-active-border-color: var(--sigae-dark); --bs-btn-disabled-bg: var(--sigae); --bs-btn-disabled-border-color: var(--sigae); }
+.btn-outline-primary { --bs-btn-color: var(--sigae); --bs-btn-border-color: var(--sigae); --bs-btn-hover-bg: var(--sigae); --bs-btn-hover-border-color: var(--sigae); --bs-btn-active-bg: var(--sigae); }
+.bg-primary { background-color: var(--sigae) !important; }
+.text-sigae { color: var(--sigae) !important; }
+.form-control:focus, .form-select:focus { border-color: var(--sigae); box-shadow: 0 0 0 .2rem rgba(0, 17, 120, .15); }
+.card { border: 1px solid var(--line) !important; box-shadow: none !important; }
+
+/* ---------- Sidebar (azul escuro) ---------- */
+.sigae-sidebar-col { background: var(--sigae); display: flex; flex-direction: column; }
+.sigae-sidebar { --bs-offcanvas-bg: var(--sigae); --bs-offcanvas-color: #fff; --bs-offcanvas-width: 280px; color: #fff; }
+.sigae-sidebar .offcanvas-header { border-bottom: 1px solid rgba(255,255,255,.12); }
+.logo-box { width: 42px; height: 42px; border-radius: 4px; background: #fff; color: var(--sigae); display: grid; place-items: center; font-size: 1.35rem; flex: none; }
+.brand-name { font-weight: 800; letter-spacing: .5px; line-height: 1.1; font-size: 1.2rem; }
+.brand-sub { font-size: .62rem; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,.65); }
+.menu-label { font-size: .68rem; letter-spacing: 1.5px; font-weight: 700; color: rgba(255,255,255,.55); padding: 0 .9rem; margin: 1.5rem 0 .6rem; }
+.sigae-link { display: flex; align-items: center; gap: .75rem; padding: .7rem .9rem; border-radius: 4px; color: rgba(255,255,255,.88); text-decoration: none; font-weight: 500; background: none; border: 0; width: 100%; text-align: left; }
+.sigae-link:hover { background: rgba(255,255,255,.1); color: #fff; }
+.sigae-link.active { background: #fff; color: var(--sigae); font-weight: 600; }
+.sigae-link.active::after { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--sigae); margin-left: auto; }
+@media (min-width: 992px) { .sigae-sidebar-col { flex: 0 0 280px; height: 100vh; position: sticky; top: 0; } }
+
+/* ---------- Topbar / área principal ---------- */
+.main-area { min-width: 0; flex: 1; min-height: 100vh; }
+.topbar { background: #fff; border-bottom: 1px solid var(--line); padding: .7rem 1.25rem; display: flex; align-items: center; gap: 1rem; position: sticky; top: 0; z-index: 1020; }
+.user-chip { display: flex; align-items: center; gap: .7rem; margin-left: auto; }
+.avatar { width: 38px; height: 38px; border-radius: 4px; background: var(--sigae); color: #fff; display: grid; place-items: center; font-weight: 700; font-size: .8rem; }
+.user-chip small { color: #6b7194; }
+
+/* ---------- Início: cartões de reserva (estilo i9) ---------- */
+.reserva-card { background: #fff; border: 1px solid var(--line); border-radius: 4px; overflow: hidden; box-shadow: 0 1px 3px rgba(0, 17, 120, .08); }
+.reserva-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; padding: .9rem 1.25rem; color: #fff; }
+.head-atual { background: var(--sigae); }
+.head-encerrado { background: #343a46; }          /* turno que já passou */
+.head-proximo { background: #5a6ab8; }
+.reserva-body { padding: 1.1rem 1.25rem; display: flex; flex-direction: column; gap: .25rem; }
+.reserva-toggle { width: 100%; display: flex; justify-content: space-between; align-items: center; background: #f6f7fd; border: 0; border-top: 1px solid var(--line); padding: .75rem 1.25rem; color: var(--sigae); font-weight: 600; }
+.reserva-toggle i { transition: transform .2s; }
+.reserva-toggle[aria-expanded="true"] i { transform: rotate(45deg); }
+.nb-destaque { font-size: 2.2rem; font-weight: 800; color: var(--sigae); line-height: 1.1; }
+
+/* ---------- Outras telas ---------- */
+.nb-card { border: 1px solid var(--line); border-radius: 4px; text-align: center; background: #fff; }
+.nb-num { font-size: 1.6rem; font-weight: 700; color: var(--sigae); }
+.page-title { color: var(--sigae); font-weight: 800; }
+.table thead th { color: var(--sigae); border-bottom: 2px solid var(--sigae); white-space: nowrap; }
+
+/* ---------- Submenu / filtros / rodapé de cartão ---------- */
+.sigae-link.open { background: rgba(255,255,255,.1); color: #fff; }
+.sigae-link .chev { transition: transform .2s; font-size: .8rem; }
+.sigae-link[aria-expanded="true"] .chev { transform: rotate(180deg); }
+.sigae-sub { padding: .25rem 0 .25rem 1.25rem; }
+.filtro-card { border-top: 3px solid var(--sigae); }
+.reserva-footer { background: #f6f7fd; border-top: 1px solid var(--line); padding: .75rem 1.25rem; }
+.nb-DIS { border-top: 3px solid #198754; } .nb-RES { border-top: 3px solid #ffc107; }
+.nb-EMP { border-top: 3px solid var(--sigae); } .nb-MAN { border-top: 3px solid #6c757d; }
